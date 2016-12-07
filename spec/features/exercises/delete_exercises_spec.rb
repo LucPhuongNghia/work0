@@ -1,17 +1,17 @@
 require "rails_helper"
 
-RSpec.feature "Delete exercise" do
+RSpec.feature "Deleting Exercise" do
     before do
-       @owner = User.create!(first_name: "John", last_name: "Doe", email: "owner@example.com", password: "password")
-    
-       @owner_exercise = @owner.exercises.create!(duration_in_min: 48,
-                                                workout: "My body building activity",
-                                                workout_date: Date.today)
-                                                
-       login_as(@owner) 
+        @owner = User.create!(first_name: "John", last_name: "Doe", email: "owner@example.com", password: "password")
+        
+        @owner_exercise = @owner.exercises.create!(duration_in_min: 48,
+                                                    workout: "My body building activity",
+                                                    workout_date: Date.today)
+                                                    
+        login_as(@owner)
     end
     
-    before do
+    scenario do
        visit "/"
        click_link("My lounge")
        

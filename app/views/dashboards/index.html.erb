@@ -2,3 +2,12 @@
     <h1>Workout lounge!</h1>
     <p>Show your workout to other Athletes</p>
 </div>
+
+<h1 class='text-center'>Member List</h1>
+<div class="row">
+    <% @athletes.each do |athlete| %>
+        <div class='col-md-10 well member'>
+            <%= athlete.full_name %>
+        </div>
+    <% end %>
+</div>

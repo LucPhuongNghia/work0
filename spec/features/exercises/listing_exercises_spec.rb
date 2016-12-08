@@ -4,6 +4,8 @@ RSpec.feature "Listing exercises" do
     before do
        @john = User.create(first_name: "john", last_name: "Doe", 
                             email: 'john@example.com', password: 'password')
+       @sarah = User.create(first_name: "sarah", last_name: "Ann", 
+                            email: 'sarah@example.com', password: 'password')
        login_as(@john)
        
        @e1 = @john.exercises.create(duration_in_min: 25,
@@ -14,9 +16,11 @@ RSpec.feature "Listing exercises" do
                                   workout: "Weight lifting",
                                   workout_date: 2.days.ago)
                                   
-       @e3 = @john.exercises.create(duration_in_min: 35,
-                                  workout: "Running",
-                                  workout_date: 8.days.ago)
+       @following = Friendship.create(user: @john, friend: @sarah)                              
+                                  
+       #@e3 = @john.exercises.create(duration_in_min: 35,
+       #                           workout: "Running",
+       #                           workout_date: 8.days.ago)
                                   
     end
     
@@ -32,9 +36,9 @@ RSpec.feature "Listing exercises" do
        expect(page).to have_content(@e2.workout)
        expect(page).to have_content(@e2.workout_date)
        
-       expect(page).not_to have_content(@e3.duration_in_min)
-       expect(page).not_to have_content(@e3.workout)
-       expect(page).not_to have_content(@e3.workout_date)
+       #expect(page).not_to have_content(@e3.duration_in_min)
+       #expect(page).not_to have_content(@e3.workout)
+       #expect(page).not_to have_content(@e3.workout_date)
        
     end
     
@@ -43,6 +47,15 @@ RSpec.feature "Listing exercises" do
        visit '/'
        click_link "My lounge"
        expect(page).to have_content("No Workouts Yet")
+    end
+    
+    scenario "Show a list of user's friends" do
+       visit "/"
+       
+       click_link "My lounge"
+       expect(page).to have_content("My Friends")
+       expect(page).to have_link(@sarah.full_name)
+       expect(page).to have_link("Unfollow")
     end
     
 end

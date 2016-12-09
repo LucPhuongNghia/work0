@@ -7,9 +7,12 @@ class User < ApplicationRecord
   has_many :exercises
   has_many :friendships
   has_many :friends, through: :friendships, class_name: "User"
+  has_one  :room
   
   validates :first_name, presence: true
   validates :last_name, presence: true 
+  
+  after_create :create_chatroom
   
   self.per_page = 3
   
@@ -32,12 +35,18 @@ class User < ApplicationRecord
     end
   end
   
-  def follow_or_same?(name)
-    friendships.map(&:friend).include?(name) || self == name
+  def follow_or_same?(new_friend)
+    friendships.map(&:friend).include?(new_friend) || self == new_friend
   end
   
   def current_friendship(friend)
     Friendship.where(friend: friend).first 
   end
   
+  private
+  
+  def create_chatroom
+    hyphenated_username = self.full_name.split.join('-')
+    Room.create(name: hyphenated_username, user_id: self.id)
+  end
 end

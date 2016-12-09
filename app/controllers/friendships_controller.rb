@@ -9,8 +9,9 @@ class FriendshipsController < ApplicationController
    def create
       friend = User.find(params[:friend_id]) 
       params[:user_id] = current_user.id
-      
       Friendship.create(friendship_params) unless current_user.follow_or_same?(friend)
+      flash[:notice] = "You have follow a friend"
+      redirect_to root_path
    end
    
    def destroy
